@@ -1,6 +1,11 @@
 httpx>=0.27
 websockets>=13
 numpy>=1.26
-sherpa-onnx>=1.10
 python-dotenv>=1.0
 certifi
+sherpa-onnx>=1.10
+# Ships the native libraries (libonnxruntime) that sherpa-onnx dlopens. The
+# sherpa-onnx sdist omits this dependency even though its wheels declare it,
+# so resolvers that build from sdist install an unloadable extension. Listing
+# it explicitly keeps pip and uv honest.
+sherpa-onnx-core>=1.13

@@ -73,13 +73,27 @@ at all in a slow back-and-forth conversation. Reproduce with
 ```bash
 git clone https://github.com/Benson-mk/qwen-asr-latency-bench
 cd qwen-asr-latency-bench
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+
+uv sync                                  # or: python3 -m venv .venv &&
+source .venv/bin/activate                #     .venv/bin/pip install -r requirements.txt
 
 cp .env.example .env      # add your DASHSCOPE_API_KEY
-.venv/bin/python bench.py
+python bench.py
 ```
 
 The silero VAD model downloads automatically on first run.
+
+<details>
+<summary><code>ImportError: Library not loaded: @rpath/libonnxruntime.dylib</code></summary>
+
+The native libraries live in a companion package, `sherpa-onnx-core`. The
+`sherpa-onnx` **sdist** does not declare that dependency (its wheels do), so a
+resolver that builds from the sdist installs an extension module with nothing
+to link against. Both `uv sync` and the `requirements.txt` above pin it
+explicitly; if you installed some other way, `uv add sherpa-onnx-core` or
+`pip install sherpa-onnx-core` fixes it.
+
+</details>
 
 ```bash
 python bench.py --clips 8                              # all three backends
