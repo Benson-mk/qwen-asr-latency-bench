@@ -1,6 +1,6 @@
 {
   "run": {
-    "recorded_at": "2026-08-17T06:44:50+00:00",
+    "recorded_at": "2026-08-17T08:53:17+00:00",
     "route": "direct",
     "audio": "audio/consultation_yue_16k.wav",
     "clips": 8,
@@ -10,16 +10,16 @@
   },
   "summary": {
     "flash-cold": {
-      "settle_median_ms": 12635,
-      "settle_p90_ms": 20140
+      "settle_median_ms": 4295,
+      "settle_p90_ms": 5801
     },
     "flash-warm": {
-      "settle_median_ms": 15345,
-      "settle_p90_ms": 95052
+      "settle_median_ms": 3839,
+      "settle_p90_ms": 7587
     },
     "realtime": {
-      "settle_median_ms": 1968,
-      "settle_p90_ms": 6755
+      "settle_median_ms": 713,
+      "settle_p90_ms": 1850
     }
   },
   "trials": {
@@ -27,64 +27,64 @@
       {
         "clip": 1,
         "audio_s": 6.31,
-        "first_ms": 19124,
-        "settle_ms": 19124,
+        "first_ms": 4416,
+        "settle_ms": 4416,
         "text": "你好，今日邊度唔舒服？我琴晚開始肚痛，屙咗六七次，今朝仲嘔吐咗兩次。",
         "error": null
       },
       {
         "clip": 2,
         "audio_s": 2.06,
-        "first_ms": 20140,
-        "settle_ms": 20140,
+        "first_ms": 3758,
+        "settle_ms": 3758,
         "text": "少少，三十七點八。",
         "error": null
       },
       {
         "clip": 3,
         "audio_s": 2.89,
-        "first_ms": 14718,
-        "settle_ms": 14718,
+        "first_ms": 5801,
+        "settle_ms": 5801,
         "text": "又冇屙出血，或者黑色冇血，水水哋咁。",
         "error": null
       },
       {
         "clip": 4,
         "audio_s": 3.11,
-        "first_ms": 15720,
-        "settle_ms": 15720,
+        "first_ms": 3559,
+        "settle_ms": 3559,
         "text": "嘅嘢，琴晚喺旺角食咗刺身同燒蠔。",
         "error": null
       },
       {
         "clip": 5,
         "audio_s": 1.58,
-        "first_ms": 4193,
-        "settle_ms": 4193,
+        "first_ms": 5062,
+        "settle_ms": 5062,
         "text": "屋企就開始唔妥。",
         "error": null
       },
       {
         "clip": 6,
         "audio_s": 1.51,
-        "first_ms": 2983,
-        "settle_ms": 2983,
+        "first_ms": 3731,
+        "settle_ms": 3731,
         "text": "屋企人有冇一齊賭哦。",
         "error": null
       },
       {
         "clip": 7,
         "audio_s": 1.96,
-        "first_ms": 10551,
-        "settle_ms": 10551,
+        "first_ms": 5763,
+        "settle_ms": 5763,
         "text": "呢度地圖，但系唔繫好sharp。",
         "error": null
       },
       {
         "clip": 8,
         "audio_s": 1.87,
-        "first_ms": 3518,
-        "settle_ms": 3518,
+        "first_ms": 4174,
+        "settle_ms": 4174,
         "text": "冇明顯反彈同。",
         "error": null
       }
@@ -93,64 +93,64 @@
       {
         "clip": 1,
         "audio_s": 6.31,
-        "first_ms": 95052,
-        "settle_ms": 95052,
+        "first_ms": 7587,
+        "settle_ms": 7587,
         "text": "你好，今日邊度唔舒服？我琴晚開始肚痛，屙咗六七次，今朝仲嘔吐咗兩次。",
         "error": null
       },
       {
         "clip": 2,
         "audio_s": 2.06,
-        "first_ms": 20025,
-        "settle_ms": 20025,
+        "first_ms": 4320,
+        "settle_ms": 4320,
         "text": "少少，三十七點八。",
         "error": null
       },
       {
         "clip": 3,
         "audio_s": 2.89,
-        "first_ms": 9829,
-        "settle_ms": 9829,
+        "first_ms": 4006,
+        "settle_ms": 4006,
         "text": "又冇屙出血，或者黑色冇血，水水哋咁。",
         "error": null
       },
       {
         "clip": 4,
         "audio_s": 3.11,
-        "first_ms": 14206,
-        "settle_ms": 14206,
+        "first_ms": 3280,
+        "settle_ms": 3280,
         "text": "嘅嘢，琴晚喺旺角食咗刺身同燒蠔。",
         "error": null
       },
       {
         "clip": 5,
         "audio_s": 1.58,
-        "first_ms": 4389,
-        "settle_ms": 4389,
+        "first_ms": 3018,
+        "settle_ms": 3018,
         "text": "屋企就開始唔妥。",
         "error": null
       },
       {
         "clip": 6,
         "audio_s": 1.51,
-        "first_ms": 16483,
-        "settle_ms": 16483,
+        "first_ms": 3438,
+        "settle_ms": 3438,
         "text": "屋企人有冇一齊賭哦。",
         "error": null
       },
       {
         "clip": 7,
         "audio_s": 1.96,
-        "first_ms": 9901,
-        "settle_ms": 9901,
+        "first_ms": 4520,
+        "settle_ms": 4520,
         "text": "呢度地圖，但系唔繫好sharp。",
         "error": null
       },
       {
         "clip": 8,
         "audio_s": 1.87,
-        "first_ms": 17976,
-        "settle_ms": 17976,
+        "first_ms": 3672,
+        "settle_ms": 3672,
         "text": "冇明顯反彈同。",
         "error": null
       }
@@ -159,65 +159,65 @@
       {
         "clip": 1,
         "audio_s": 6.31,
-        "first_ms": -5602,
-        "settle_ms": 6755,
-        "text": "你好，今日邊度唔舒服我琴晚開始肚痛，屙咗六七次，今朝仲嘔吐咗兩次。",
+        "first_ms": -4959,
+        "settle_ms": 538,
+        "text": "你好，今日邊度唔舒服我琴晚開始肚痛，屙咗六七次，今次。",
         "error": null
       },
       {
         "clip": 2,
         "audio_s": 2.06,
-        "first_ms": -1310,
-        "settle_ms": 981,
+        "first_ms": -204,
+        "settle_ms": 477,
         "text": "少少，三十七點八。",
         "error": null
       },
       {
         "clip": 3,
         "audio_s": 2.89,
-        "first_ms": -1811,
-        "settle_ms": 2550,
-        "text": "有冇柯士甸或者黑色，水水地咁。",
+        "first_ms": -1843,
+        "settle_ms": 764,
+        "text": "又冇屙出血，或者黑色，冇血，水水地咁。",
         "error": null
       },
       {
         "clip": 4,
         "audio_s": 3.11,
-        "first_ms": -2500,
-        "settle_ms": 840,
+        "first_ms": -1949,
+        "settle_ms": 1850,
         "text": "嘢，琴晚喺旺角食咗刺身同燒蠔。",
         "error": null
       },
       {
         "clip": 5,
         "audio_s": 1.58,
-        "first_ms": 1206,
-        "settle_ms": 3858,
+        "first_ms": -351,
+        "settle_ms": 727,
         "text": "翻咗屋企就開始唔妥。",
         "error": null
       },
       {
         "clip": 6,
         "audio_s": 1.51,
-        "first_ms": -505,
-        "settle_ms": 1614,
+        "first_ms": -541,
+        "settle_ms": 816,
         "text": "屋企人有冇一齊賭哦。",
         "error": null
       },
       {
         "clip": 7,
         "audio_s": 1.96,
-        "first_ms": -1239,
-        "settle_ms": 1649,
-        "text": "呢度地圖，但系唔繫好sharp。",
+        "first_ms": -1100,
+        "settle_ms": 698,
+        "text": "呢度地圖，但系唔繫好shot。",
         "error": null
       },
       {
         "clip": 8,
         "audio_s": 1.87,
-        "first_ms": 522,
-        "settle_ms": 2287,
-        "text": "好冇明顯反彈同。",
+        "first_ms": -527,
+        "settle_ms": 112,
+        "text": "好冇明顯。",
         "error": null
       }
     ]

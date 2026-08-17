@@ -21,18 +21,20 @@ Two DashScope backends, same sentences, same clock:
 ## Results
 
 8 Cantonese sentences (1.5–6.3 s), 16 kHz mono, replayed at 1× wall-clock pace,
-measured from Hong Kong. Two network paths, because they disagree sharply:
-
-Median settle after speech end, from the recorded runs in
+measured from Hong Kong. Median settle after speech end, per recorded run in
 [`results/`](results/README.md):
 
-| backend | direct | via proxy |
+| backend | [direct](results/direct.json) | [via proxy](results/proxy.json) |
 |---|---:|---:|
-| `realtime` | **1968 ms** | **1531 ms** |
-| `flash-cold` | 12635 ms | 5731 ms |
-| `flash-warm` | 15345 ms | 8373 ms |
+| `realtime` | **713 ms** | **1531 ms** |
+| `flash-cold` | 4295 ms | 5731 ms |
+| `flash-warm` | 3839 ms | 8373 ms |
 
-**Realtime wins by several times on every run.** That ordering is the durable
+These two runs are **two hours apart**, so read each column on its own. The gap
+between backends within a column is the finding; the difference between the
+columns is mostly the hour, not the route.
+
+**Realtime wins by several times in every run.** That ordering is the durable
 result. The absolute numbers are not: repeated runs of the identical command
 have put flash-cold anywhere between 3.2 s and 12.6 s, because upload
 throughput to the endpoint swings hour to hour.
@@ -47,9 +49,9 @@ Take the ranking; measure your own absolutes. See
 [results/README.md](results/README.md) for how far these move, and for a known
 artifact where a truncated reply scores as a fast one.
 
-**Realtime answers ~4.7× sooner, and starts answering before you finish.**
-Its first token lands at a *negative* offset — a median of 1.2 s before speech
-end, and 5.5 s before it on the longest sentence — because it transcribes
+**Realtime answers ~6× sooner, and starts answering before you finish.**
+Its first token lands at a *negative* offset — a median of 0.8 s before speech
+end, and 5.0 s before it on the longest sentence — because it transcribes
 mid-utterance. Flash cannot beat its own endpointer: nothing is sent until the
 VAD is convinced the sentence is over.
 
@@ -60,8 +62,15 @@ Two numbers are reported because one would mislead:
 - **settle** — when the transcript stops changing. This is the honest
   cross-backend comparison, and the headline above.
 
-Realtime trades a little accuracy for the latency: on these clips it produced
-`唞` for `賭`, and dropped a word or two that flash caught.
+**Realtime buys that speed with accuracy, and the harness does not charge it
+for that.** In the direct run it ended clip 1 at `今次。` where flash heard
+`今朝仲嘔吐咗兩次。`, and returned `好冇明顯。` against flash's
+`冇明顯反彈同。`. It also produced `shot` for `sharp`.
+
+A backend that stops early looks *faster* here, because settle only asks when
+the text stopped changing, never whether it was right. Read every latency next
+to the transcript beside it — both result files keep the text for exactly this
+reason. Scoring against a reference transcript is the obvious missing piece.
 
 ### Where flash's latency goes
 
