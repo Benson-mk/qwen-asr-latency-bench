@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+from datetime import datetime, timezone
 
 from qwenbench import report
 from qwenbench.audio import Clip, cut_sentences, read_wav
@@ -90,7 +91,19 @@ async def main() -> None:
         report.summarize(name, results[name])
 
     report.compare(results)
-    report.to_json(results, args.out)
+    report.to_json(
+        results,
+        args.out,
+        run={
+            "recorded_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "route": settings.proxy or "direct",
+            "audio": args.audio,
+            "clips": len(clips),
+            "pause_s": args.pause,
+            "flash_model": settings.flash_model,
+            "realtime_model": settings.realtime_model,
+        },
+    )
 
 
 if __name__ == "__main__":

@@ -23,30 +23,29 @@ Two DashScope backends, same sentences, same clock:
 8 Cantonese sentences (1.5–6.3 s), 16 kHz mono, replayed at 1× wall-clock pace,
 measured from Hong Kong. Two network paths, because they disagree sharply:
 
-**Direct (the default, `python bench.py`)**
+Median settle after speech end, from the recorded runs in
+[`results/`](results/README.md):
 
-| backend | settle after speech end (median) | p90 | vs fastest |
-|---|---|---|---|
-| `realtime` | **1431 ms** | 5546 ms | — |
-| `flash-cold` | 6247 ms | 15441 ms | 4.4× slower |
-| `flash-warm` | 7225 ms | 16379 ms | 5.0× slower |
+| backend | direct | via proxy |
+|---|---:|---:|
+| `realtime` | **1968 ms** | **1531 ms** |
+| `flash-cold` | 12635 ms | 5731 ms |
+| `flash-warm` | 15345 ms | 8373 ms |
 
-**Through a proxy (`python bench.py --proxy`)**
+**Realtime wins by several times on every run.** That ordering is the durable
+result. The absolute numbers are not: repeated runs of the identical command
+have put flash-cold anywhere between 3.2 s and 12.6 s, because upload
+throughput to the endpoint swings hour to hour.
 
-| backend | settle after speech end (median) | first token (median) | vs fastest |
-|---|---|---|---|
-| `realtime` | **677 ms** | −1187 ms | — |
-| `flash-cold` | 3154 ms | 3154 ms | 4.7× slower |
-| `flash-warm` | 3210 ms | 3210 ms | 4.7× slower |
+Flash is exposed to that swing and realtime mostly is not, which is the
+mechanism behind the gap. Flash uploads a whole sentence *after* speech ends,
+so every byte of transfer lands inside the measured window; realtime dribbles
+small frames while the speaker is still talking, overlapping transfer with
+speech. Same bytes, but only one of the two makes you wait for them.
 
-The ranking is stable across both paths; the absolute numbers are not. On this
-connection the *direct* route to DashScope is roughly 4× slower for bulk upload
-than the same request through a proxy — 7 KB/s vs 19 KB/s on a 47 KB clip —
-and much less predictable. Since flash uploads whole sentences and realtime
-dribbles small frames, a slow uplink punishes flash far more, which is why
-flash's numbers move so much more than realtime's between the two tables.
-
-Measure your own path before trusting either table.
+Take the ranking; measure your own absolutes. See
+[results/README.md](results/README.md) for how far these move, and for a known
+artifact where a truncated reply scores as a fast one.
 
 **Realtime answers ~4.7× sooner, and starts answering before you finish.**
 Its first token lands at a *negative* offset — a median of 1.2 s before speech
@@ -66,10 +65,10 @@ Realtime trades a little accuracy for the latency: on these clips it produced
 
 ### Where flash's latency goes
 
-| component | ms (via proxy) |
+| component | ms |
 |---|---|
-| local VAD hangover (0.4 s silence + 0.25 s padding) | ~650 |
-| HTTP round trip (upload, inference, response) | ~2500 |
+| local VAD hangover (0.4 s silence + 0.25 s padding) | ~650, fixed |
+| HTTP round trip (upload, inference, response) | 1400–12000, your network |
 
 The VAD hangover is fixed; the round trip is whatever your uplink gives you.
 Realtime pays the same upload but overlaps it with speech instead of waiting
@@ -172,6 +171,3 @@ qwenbench/backends/flash.py      local VAD + HTTP per segment
 qwenbench/backends/realtime.py   streaming WebSocket
 ```
 
-## License
-
-MIT

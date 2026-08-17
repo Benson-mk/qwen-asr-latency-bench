@@ -82,20 +82,40 @@ def compare(results: dict[str, list[Trial]]) -> None:
         print(f"  {name:<28} {stats.median:7.0f} ms{marker}")
 
 
-def to_json(results: dict[str, list[Trial]], path: str) -> None:
+def to_json(
+    results: dict[str, list[Trial]], path: str, run: dict[str, object] | None = None
+) -> None:
+    """Write per-trial timings, stamped with the run that produced them.
+
+    The `run` block is what makes a saved result quotable. Identical audio and
+    code produce 2-3x different numbers depending on the network route, so a
+    bare table of milliseconds is unreadable a week later.
+    """
+    summary: dict[str, dict[str, float | None]] = {}
+    for name, trials in results.items():
+        stats = Stats.of([t.settle_ms for t in trials if t.ok and t.settle_ms is not None])
+        summary[name] = {
+            "settle_median_ms": None if stats is None else round(stats.median),
+            "settle_p90_ms": None if stats is None else round(stats.p90),
+        }
+
     payload = {
-        name: [
-            {
-                "clip": t.clip_index,
-                "audio_s": round(t.audio_s, 2),
-                "first_ms": None if t.first_ms is None else round(t.first_ms),
-                "settle_ms": None if t.settle_ms is None else round(t.settle_ms),
-                "text": t.text,
-                "error": t.error,
-            }
-            for t in trials
-        ]
-        for name, trials in results.items()
+        "run": run or {},
+        "summary": summary,
+        "trials": {
+            name: [
+                {
+                    "clip": t.clip_index,
+                    "audio_s": round(t.audio_s, 2),
+                    "first_ms": None if t.first_ms is None else round(t.first_ms),
+                    "settle_ms": None if t.settle_ms is None else round(t.settle_ms),
+                    "text": t.text,
+                    "error": t.error,
+                }
+                for t in trials
+            ]
+            for name, trials in results.items()
+        },
     }
     with open(path, "w", encoding="utf-8") as handle:
         json.dump(payload, handle, ensure_ascii=False, indent=2)
