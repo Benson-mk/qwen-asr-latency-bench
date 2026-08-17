@@ -20,14 +20,33 @@ Two DashScope backends, same sentences, same clock:
 
 ## Results
 
-8 Cantonese sentences (1.5–6.3 s), 16 kHz mono, replayed at 1× wall-clock pace.
-Measured from Hong Kong through a local proxy (see [Caveats](#caveats)).
+8 Cantonese sentences (1.5–6.3 s), 16 kHz mono, replayed at 1× wall-clock pace,
+measured from Hong Kong. Two network paths, because they disagree sharply:
+
+**Direct (the default, `python bench.py`)**
+
+| backend | settle after speech end (median) | p90 | vs fastest |
+|---|---|---|---|
+| `realtime` | **1431 ms** | 5546 ms | — |
+| `flash-cold` | 6247 ms | 15441 ms | 4.4× slower |
+| `flash-warm` | 7225 ms | 16379 ms | 5.0× slower |
+
+**Through a proxy (`python bench.py --proxy`)**
 
 | backend | settle after speech end (median) | first token (median) | vs fastest |
 |---|---|---|---|
 | `realtime` | **677 ms** | −1187 ms | — |
 | `flash-cold` | 3154 ms | 3154 ms | 4.7× slower |
 | `flash-warm` | 3210 ms | 3210 ms | 4.7× slower |
+
+The ranking is stable across both paths; the absolute numbers are not. On this
+connection the *direct* route to DashScope is roughly 4× slower for bulk upload
+than the same request through a proxy — 7 KB/s vs 19 KB/s on a 47 KB clip —
+and much less predictable. Since flash uploads whole sentences and realtime
+dribbles small frames, a slow uplink punishes flash far more, which is why
+flash's numbers move so much more than realtime's between the two tables.
+
+Measure your own path before trusting either table.
 
 **Realtime answers ~4.7× sooner, and starts answering before you finish.**
 Its first token lands at a *negative* offset — a median of 1.2 s before speech
@@ -45,12 +64,16 @@ Two numbers are reported because one would mislead:
 Realtime trades a little accuracy for the latency: on these clips it produced
 `唞` for `賭`, and dropped a word or two that flash caught.
 
-### Where flash's 3.2 s goes
+### Where flash's latency goes
 
-| component | ms |
+| component | ms (via proxy) |
 |---|---|
 | local VAD hangover (0.4 s silence + 0.25 s padding) | ~650 |
 | HTTP round trip (upload, inference, response) | ~2500 |
+
+The VAD hangover is fixed; the round trip is whatever your uplink gives you.
+Realtime pays the same upload but overlaps it with speech instead of waiting
+for the sentence to end.
 
 ### Connection reuse
 
@@ -99,8 +122,14 @@ explicitly; if you installed some other way, `uv add sherpa-onnx-core` or
 python bench.py --clips 8                              # all three backends
 python bench.py --backends realtime --clips 20         # one backend, more samples
 python bench.py --audio path/to/your.wav               # 16 kHz mono PCM16
+python bench.py --proxy                                # route via DASHSCOPE_PROXY
+python bench.py --proxy http://127.0.0.1:10808         # route via a specific proxy
 python tests/test_transcript.py                        # unit tests
 ```
+
+Connections go **direct by default**. `DASHSCOPE_PROXY` is never applied on its
+own — a proxy adds a hop to every measurement, so it takes an explicit
+`--proxy` to opt in.
 
 Per-trial timings land in `results.json`.
 
@@ -123,9 +152,9 @@ Fidelity to a live microphone is what makes the numbers mean anything:
 
 ## Caveats
 
-- **Every measurement includes a local proxy** (`DASHSCOPE_PROXY`), which costs
-  ~1.9 s on a bare connect. Absolute numbers will be lower on a direct
-  China-region connection; the *ratio* between backends is what transfers.
+- **Your network dominates the absolute numbers.** The two tables above differ
+  by 2–3× on identical audio and code, purely by route. The ranking held on
+  both, but do not quote a millisecond figure measured on someone else's link.
 - Sample size is 8 sentences on one network from one location. Rerun it on
   yours — that is what the repo is for.
 - Audio is TTS-generated synthetic clinical dialogue. No real patient data.

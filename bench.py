@@ -52,10 +52,25 @@ async def main() -> None:
     # flash-cold at all. See "Connection reuse" in the README.
     parser.add_argument("--pause", type=float, default=1.0)
     parser.add_argument("--out", default="results.json")
+    parser.add_argument(
+        "--proxy",
+        nargs="?",
+        const="",
+        default=None,
+        metavar="URL",
+        help="route through a proxy; bare --proxy uses DASHSCOPE_PROXY from the "
+        "environment. Off by default so timings measure the network you are on.",
+    )
     args = parser.parse_args()
 
+    proxy = args.proxy
+    if proxy == "":
+        proxy = Settings.env_proxy()
+        if proxy is None:
+            raise SystemExit("--proxy given with no URL and DASHSCOPE_PROXY is not set")
+
     try:
-        settings = Settings.from_env()
+        settings = Settings.from_env(proxy=proxy)
     except MissingCredentials as exc:
         raise SystemExit(str(exc))
 

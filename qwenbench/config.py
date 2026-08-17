@@ -25,7 +25,19 @@ class Settings:
     realtime_model: str
 
     @classmethod
-    def from_env(cls) -> "Settings":
+    def env_proxy(cls) -> str | None:
+        load_dotenv()
+        return os.environ.get("DASHSCOPE_PROXY") or None
+
+    @classmethod
+    def from_env(cls, proxy: str | None = None) -> "Settings":
+        """Read settings, connecting directly unless a proxy is passed in.
+
+        `DASHSCOPE_PROXY` is deliberately not applied on its own. A proxy adds
+        an unpredictable hop to every timing, and a benchmark that silently
+        inherited one from the environment would publish numbers that nobody
+        else could reproduce or interpret.
+        """
         load_dotenv()
         key = os.environ.get("DASHSCOPE_API_KEY", "").strip()
         if not key:
@@ -36,7 +48,7 @@ class Settings:
             api_key=key,
             http_base=os.environ.get("DASHSCOPE_HTTP_BASE", DEFAULT_HTTP_BASE),
             realtime_url=os.environ.get("DASHSCOPE_REALTIME_URL", DEFAULT_REALTIME_URL),
-            proxy=os.environ.get("DASHSCOPE_PROXY") or None,
+            proxy=proxy,
             flash_model=os.environ.get("QWEN_FLASH_MODEL", DEFAULT_FLASH_MODEL),
             realtime_model=os.environ.get("QWEN_REALTIME_MODEL", DEFAULT_REALTIME_MODEL),
         )
@@ -46,7 +58,7 @@ class Settings:
         return {"Authorization": f"Bearer {self.api_key}"}
 
     def describe(self) -> str:
+        route = self.proxy or "direct"
         return (
-            f"flash={self.flash_model} realtime={self.realtime_model} "
-            f"proxy={self.proxy or 'none'}"
+            f"flash={self.flash_model} realtime={self.realtime_model} route={route}"
         )
